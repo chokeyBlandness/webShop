@@ -16,7 +16,7 @@
             <img src="57d0d400Nfd249af4.jpg" alt="Error show" width="90px" height="120px"><br/>
             <b>iphone</b><br/>
             <b>PRICE:4600</b><br/>
-            <input type="checkbox" name="purchase" value="phone1"/>purchase<br/>
+            <input type="checkbox" name="purchase" value="iphone"/>purchase<br/>
             number:<input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" 
                    onafterpaste="this.value=this.value.replace(/\D/g,'')"
                     style="width: 60px" name="phone1Number"/>
@@ -26,20 +26,20 @@
             <img src="59bf3c47N91d65c73.jpg" alt="Error show" width="90px" height="120px"><br/>
             <b>HUAWEI</b><br/>
             <b>PRICE:1900</b><br/>
-            <input type="checkbox" name="purchase" value="phone2"/>purchase<br/>
+            <input type="checkbox" name="purchase" value="HUAWEI"/>purchase<br/>
             number:<input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" 
                    onafterpaste="this.value=this.value.replace(/\D/g,'')"
-                   style="width: 60px" name="phone1Number"/>
+                   style="width: 60px" name="phone2Number"/>
         </div>
 
         <div style="height: 200px;width: 180px;float: left">
             <img src="59521206N527bb108.jpg" alt="Error show" width="90px" height="120px"><br/>
             <b>XiaoMi</b><br/>
             <b>PRICE:1000</b><br/>
-            <input type="checkbox" name="purchase" value="phone3"/>purchase<br/>
+            <input type="checkbox" name="purchase" value="XiaoMi"/>purchase<br/>
             number:<input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" 
                    onafterpaste="this.value=this.value.replace(/\D/g,'')"
-                   style="width: 60px" name="phone1Number"/>
+                   style="width: 60px" name="phone3Number"/>
         </div>
 
         <input type="submit" value="submit"/>
