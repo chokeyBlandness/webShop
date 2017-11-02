@@ -6,12 +6,30 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    String accountValue="";
+    String passwordValue="";
+    accountValue= (String) request.getSession().getAttribute("account");
+    passwordValue= (String) request.getSession().getAttribute("password");
+    if (accountValue==null||passwordValue==null) {
+        response.sendRedirect("CheckUserServlet");
+    }else{
+        if (!accountValue.equals("111")||!passwordValue.equals("111")){
+            response.sendRedirect("CheckUserServlet");
+        }
+    }
+%>
 <html>
 <head>
     <title>webShop</title>
 </head>
 <body>
     <form action="shop.do" method="post">
+        <b>login successfully!</b><br/>
+        <b>welcome:</b>${account}<br/>
+        <p>last login:</p>${lastAccessedTime}<br/>
+        <b>loginNumber:</b>${loginNumber}<br/>
+
         <div style="height: 200px;width: 180px;float: left">
             <img src="57d0d400Nfd249af4.jpg" alt="Error show" width="90px" height="120px"><br/>
             <b>iphone</b><br/>

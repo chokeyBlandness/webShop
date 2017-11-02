@@ -1,4 +1,4 @@
-<%--
+<%@ page import="com.jingdong.ShoppingCart" %><%--
   Created by IntelliJ IDEA.
   User: Administrator
   Date: 2017/10/23
@@ -13,8 +13,8 @@
 <body>
     <form action="shoppingCart.do" method="post">
         <b>shoppingcart:</b><br/>
+        <b>welcome:</b>${account}<br/>
         ${shoppingCart}
-        ${summary}
     </form>
 
 </body>
