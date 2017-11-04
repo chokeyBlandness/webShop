@@ -1,14 +1,10 @@
 package com.jingdong;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.http.Cookie;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
-
-import static java.lang.String.valueOf;
 
 @javax.servlet.annotation.WebServlet(name = "Servlet")
 public class Servlet extends javax.servlet.http.HttpServlet {
@@ -52,10 +48,6 @@ public class Servlet extends javax.servlet.http.HttpServlet {
         }
 
 
-
-
-
-
         //request.setAttribute("shoppingCart",shoppingCart);
         RequestDispatcher rd=request.getRequestDispatcher("/ShoppingCart.jsp");
         rd.forward(request,response);
@@ -63,35 +55,20 @@ public class Servlet extends javax.servlet.http.HttpServlet {
     }
 
     protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        String accountValue="";
-        String passwordValue="";
 
-        accountValue= (String) request.getSession().getAttribute("account");
-        passwordValue= (String) request.getSession().getAttribute("password");
-        if (accountValue==null||passwordValue==null) {
+        String loginMessage="";
+        loginMessage= (String) request.getSession().getAttribute("loginMessage");
+
+        if (loginMessage==null||!loginMessage.equals("successfully login!")){
             response.sendRedirect("CheckUserServlet");
         }
         else {
-
             //read loginTime from database
             ArrayList<Long> loginTimes=new ArrayList<Long>();
-            Connection connection=null;
-            Statement statement=null;
+            ConnectDatabase_webShop webShop=new ConnectDatabase_webShop();
             ResultSet resultSet=null;
             try {
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
-                connection= DriverManager.getConnection("jdbc:sqlserver://HASEE-PC:1433;DatabaseNamE=webShop",
-                        "sa","111");
-                statement=connection.createStatement();
-            }catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                resultSet=statement.executeQuery("SELECT logintime FROM loginTime");
+                resultSet=webShop.getStatement().executeQuery("SELECT logintime FROM loginTime");
                 while (resultSet.next()){
                     loginTimes.add(resultSet.getLong(1));
                 }
@@ -100,11 +77,11 @@ public class Servlet extends javax.servlet.http.HttpServlet {
             }
             try {
                 resultSet.close();
-                statement.close();
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            webShop.closeConnect();
+            //calculate login number and last login time
             int loginNumber=loginTimes.size();
             long lastAccessedTime=0;
             if (loginNumber==1){
@@ -113,9 +90,7 @@ public class Servlet extends javax.servlet.http.HttpServlet {
                 lastAccessedTime=loginTimes.get(loginNumber-2);
             }
 
-
             request.getSession().setAttribute("loginNumber",loginNumber);
-            //long lastAccessedTime = request.getSession().getCreationTime();
             request.getSession().setAttribute("lastAccessedTime", new Date(lastAccessedTime));
             response.sendRedirect("webShop.jsp");
         }

@@ -21,4 +21,13 @@
         <url-pattern>/CheckUser.do</url-pattern>
         <url-pattern>/CheckUserServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>SignInServlet</servlet-name>
+        <servlet-class>com.jingdong.SignInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignInServlet</servlet-name>
+        <url-pattern>/SignIn.do</url-pattern>
+        <url-pattern>/SignInServlet</url-pattern>
+    </servlet-mapping>
 </web-app>

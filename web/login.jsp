@@ -11,11 +11,19 @@
     <title>login</title>
 </head>
 <body>
+    <a href="SignIn.jsp">sign in</a>
     <form action="CheckUser.do" method="post">
-        ${loginMessage}<br/>
+        <%
+            String loginMessage= (String) request.getAttribute("loginMessage");
+            if (loginMessage==null){
+                loginMessage="";
+            }
+        %>
+        <b><%=loginMessage%></b>
+        <br/>
         <b>please input your account and password:</b><br/>
-        account:<input type="text" name="account"/><br/>
-        password:<input type="password" name="password"/><br/>
+        account:<input type="text" name="account" required="required"/><br/>
+        password:<input type="password" name="password"required="required"/><br/>
         <input type="submit" value="submit"/>
         <input type="reset" value="reset"/>
     </form>

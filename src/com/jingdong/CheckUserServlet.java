@@ -1,5 +1,6 @@
 package com.jingdong;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -11,63 +12,91 @@ public class CheckUserServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginMessage="";
-        String account=request.getParameter("account");
-        String password=request.getParameter("password");
-        if (!account.equals("111")||!password.equals("111")){
+        String passwordFromDatabase="";
+        boolean findAccountFromDatabase=true;
+
+        String loginAccount=request.getParameter("account");
+        String loginPassword=request.getParameter("password");
+
+        ConnectDatabase_webShop webShop=new ConnectDatabase_webShop();
+        ResultSet resultSet=null;
+        try {
+            resultSet=webShop.getStatement().executeQuery("SELECT * FROM member WHERE account=\'" +
+                    loginAccount+"\'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (resultSet.next()==false){//donnot find account
+                findAccountFromDatabase=false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (!findAccountFromDatabase) {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            webShop.closeConnect();
+            loginMessage = "no this account!";
+            request.setAttribute("loginMessage", loginMessage);
+            RequestDispatcher requestDispatcher=request.getRequestDispatcher("/login.jsp");
+            requestDispatcher.forward(request,response);
+            return;
+        }else {
+            try {
+                passwordFromDatabase= resultSet.getString("password");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (!loginPassword.equals(passwordFromDatabase)){
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            webShop.closeConnect();
             loginMessage="wrong login!";
             request.setAttribute("loginMessage",loginMessage);
-            response.sendRedirect("login.jsp");
+            RequestDispatcher requestDispatcher=request.getRequestDispatcher("/login.jsp");
+            requestDispatcher.forward(request,response);
+            return;
         }
         else {
-            loginMessage="login successfully!";
-            request.setAttribute("loginMessage",loginMessage);
-
             HttpSession session=request.getSession(true);
-            session.setAttribute("account",account);
-            session.setAttribute("password",password);
+            loginMessage="successfully login!";
+            session.setAttribute("account",loginAccount);
+            session.setAttribute("loginMessage",loginMessage);
 
-
-            Connection connection=null;
-            Statement statement=null;
             try {
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
-                connection= DriverManager.getConnection("jdbc:sqlserver://HASEE-PC:1433;DatabaseNamE=webShop",
-                        "sa","111");
-                statement=connection.createStatement();
-            }catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                statement.executeUpdate("CREATE TABLE loginTime(logintime CHAR(20) PRIMARY KEY)");
+                webShop.getStatement().executeUpdate("CREATE TABLE loginTime(logintime VARCHAR(20) PRIMARY KEY)");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             try {
-                statement.executeUpdate("INSERT INTO loginTime VALUES ("+session.getCreationTime()+")");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } try {
-                statement.close();
-                statement.close();
+                webShop.getStatement().executeUpdate("INSERT INTO loginTime VALUES ("+session.getCreationTime()+")");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
+            webShop.closeConnect();
 
             ShoppingCart shoppingCart=new ShoppingCart();
             session.setAttribute("shoppingCart",shoppingCart);
-
             response.sendRedirect("Servlet");
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String loginMessage="";
-        request.setAttribute("loginMessage",loginMessage);
-        response.sendRedirect("login.jsp");
+        loginMessage= (String) request.getSession().getAttribute("loginMessage");
+        if (loginMessage==null||!loginMessage.equals("successfully login!")){
+            response.sendRedirect("login.jsp");
+        }else {
+            response.sendRedirect("Servlet");
+        }
     }
 }

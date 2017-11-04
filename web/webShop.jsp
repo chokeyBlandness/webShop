@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Date" %><%--
   Created by IntelliJ IDEA.
   User: Administrator
   Date: 2017/10/19
@@ -7,16 +7,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    String accountValue="";
-    String passwordValue="";
-    accountValue= (String) request.getSession().getAttribute("account");
-    passwordValue= (String) request.getSession().getAttribute("password");
-    if (accountValue==null||passwordValue==null) {
+    String loginMessage="";
+    loginMessage= (String) request.getSession().getAttribute("loginMessage");
+    if (loginMessage==null||!loginMessage.equals("successfully login!")){
         response.sendRedirect("CheckUserServlet");
-    }else{
-        if (!accountValue.equals("111")||!passwordValue.equals("111")){
-            response.sendRedirect("CheckUserServlet");
-        }
     }
 %>
 <html>
@@ -25,10 +19,15 @@
 </head>
 <body>
     <form action="shop.do" method="post">
-        <b>login successfully!</b><br/>
-        <b>welcome:</b>${account}<br/>
-        <p>last login:</p>${lastAccessedTime}<br/>
-        <b>loginNumber:</b>${loginNumber}<br/>
+        <%
+            Date lastAccessedTime= (Date) request.getSession().getAttribute("lastAccessedTime");
+            int loginNumber= (int) request.getSession().getAttribute("loginNumber");
+            String account= (String) request.getSession().getAttribute("account");
+        %>
+        <b style="color: aqua">login successfully!</b><br/>
+        <b style="color: brown">welcome:<%=account%></b><br/>
+        <p style="color: aquamarine">last loginTime:<%=lastAccessedTime%></p><br/>
+        <b style="color: aquamarine">loginNumber:<%=loginNumber%></b><br/>
 
         <div style="height: 200px;width: 180px;float: left">
             <img src="57d0d400Nfd249af4.jpg" alt="Error show" width="90px" height="120px"><br/>
@@ -59,7 +58,7 @@
                    onafterpaste="this.value=this.value.replace(/\D/g,'')"
                    style="width: 60px" name="phone3Number"/>
         </div>
-
+        <br/>
         <input type="submit" value="submit"/>
 
     </form>

@@ -11,6 +11,7 @@
     <title>shop</title>
   </head>
   <body>
+  <%response.sendRedirect("login.jsp");%>
   <form>
     <script>
       function plusNumber() {
