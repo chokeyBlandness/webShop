@@ -1,4 +1,5 @@
-<%@ page import="com.jingdong.ShoppingCart" %><%--
+<%@ page import="com.jingdong.ShoppingCart" %>
+<%@ page import="com.jingdong.Merchandise" %><%--
   Created by IntelliJ IDEA.
   User: Administrator
   Date: 2017/10/23

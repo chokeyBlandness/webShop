@@ -4,6 +4,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
+import java.sql.*;
 
 @WebServlet(name = "CheckUserServlet")
 public class CheckUserServlet extends HttpServlet {
@@ -20,36 +21,44 @@ public class CheckUserServlet extends HttpServlet {
         else {
             loginMessage="login successfully!";
             request.setAttribute("loginMessage",loginMessage);
-//            Cookie accoutCookie=new Cookie("account",account);
-//            Cookie passwordCookie=new Cookie("password",password);
-//            accoutCookie.setMaxAge(60*3);
-//            passwordCookie.setMaxAge(60*3);
-//            response.addCookie(accoutCookie);
-//            response.addCookie(passwordCookie);
 
             HttpSession session=request.getSession(true);
             session.setAttribute("account",account);
             session.setAttribute("password",password);
 
 
-            String loginTimeFilePath=this.getServletContext().getRealPath("/");
-            loginTimeFilePath=loginTimeFilePath+account+".txt";
-            File loginTimeFile=new File(loginTimeFilePath);
-            if (!loginTimeFile.exists()){
-                loginTimeFile.mkdir();
-                FileWriter fileWriter= new FileWriter(loginTimeFile);
-                fileWriter.write(1+"\n");
-                fileWriter.write(String.valueOf(session.getCreationTime())+"\n");
-                fileWriter.close();
-            }else {
-                FileWriter fileWriter= new FileWriter(loginTimeFile);
-                fileWriter.write(String.valueOf(session.getCreationTime())+"\n");
-                fileWriter.close();
+            Connection connection=null;
+            Statement statement=null;
+            try {
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-            session.setAttribute("loginTimeFilePath",loginTimeFilePath);
+            try {
+                connection= DriverManager.getConnection("jdbc:sqlserver://HASEE-PC:1433;DatabaseNamE=webShop",
+                        "sa","111");
+                statement=connection.createStatement();
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                statement.executeUpdate("CREATE TABLE loginTime(logintime CHAR(20) PRIMARY KEY)");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                statement.executeUpdate("INSERT INTO loginTime VALUES ("+session.getCreationTime()+")");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } try {
+                statement.close();
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
 
             ShoppingCart shoppingCart=new ShoppingCart();
-            //getServletContext().setAttribute("shoppingCart",shoppingCart);
             session.setAttribute("shoppingCart",shoppingCart);
 
             response.sendRedirect("Servlet");
