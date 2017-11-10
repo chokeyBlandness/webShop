@@ -64,13 +64,25 @@ public class Servlet extends javax.servlet.http.HttpServlet {
         }
         else {
             //read loginTime from database
-            ArrayList<Long> loginTimes=new ArrayList<Long>();
+            int loginNumber=0;
+            long lastAccessedTime=0;
             ConnectDatabase_webShop webShop=new ConnectDatabase_webShop();
             ResultSet resultSet=null;
             try {
-                resultSet=webShop.getStatement().executeQuery("SELECT logintime FROM loginTime");
+                resultSet=webShop.getStatement().executeQuery("SELECT COUNT(logintime) FROM loginTime");
                 while (resultSet.next()){
-                    loginTimes.add(resultSet.getLong(1));
+                    loginNumber=resultSet.getInt(1);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                resultSet=webShop.getStatement().executeQuery("SELECT TOP 2 logintime " +
+                        "FROM loginTime ORDER BY logintime DESC ");
+                resultSet.next();
+                lastAccessedTime=resultSet.getLong(1);
+                if (resultSet.next()){
+                    lastAccessedTime=resultSet.getLong(1);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -82,13 +94,7 @@ public class Servlet extends javax.servlet.http.HttpServlet {
             }
             webShop.closeConnect();
             //calculate login number and last login time
-            int loginNumber=loginTimes.size();
-            long lastAccessedTime=0;
-            if (loginNumber==1){
-                lastAccessedTime=loginTimes.get(0);
-            }else {
-                lastAccessedTime=loginTimes.get(loginNumber-2);
-            }
+
 
             request.getSession().setAttribute("loginNumber",loginNumber);
             request.getSession().setAttribute("lastAccessedTime", new Date(lastAccessedTime));

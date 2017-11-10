@@ -26,11 +26,11 @@
         %>
         <b style="color: aqua">login successfully!</b><br/>
         <b style="color: brown">welcome:<%=account%></b><br/>
-        <p style="color: aquamarine">last loginTime:<%=lastAccessedTime%></p><br/>
-        <b style="color: aquamarine">loginNumber:<%=loginNumber%></b><br/>
+        <p style="color: chocolate">last loginTime:<%=lastAccessedTime%></p><br/>
+        <b style="color: chocolate">loginNumber:<%=loginNumber%></b><br/>
 
         <div style="height: 200px;width: 180px;float: left">
-            <img src="57d0d400Nfd249af4.jpg" alt="Error show" width="90px" height="120px"><br/>
+            <img src="001.jpg" alt="Error show" width="90px" height="120px"><br/>
             <b>iphone</b><br/>
             <b>PRICE:4600</b><br/>
             <input type="checkbox" name="purchase" value="iphone"/>purchase<br/>
@@ -40,7 +40,7 @@
         </div>
 
         <div style="height: 200px;width: 180px;float: left">
-            <img src="59bf3c47N91d65c73.jpg" alt="Error show" width="90px" height="120px"><br/>
+            <img src="002.jpg" alt="Error show" width="90px" height="120px"><br/>
             <b>HUAWEI</b><br/>
             <b>PRICE:1900</b><br/>
             <input type="checkbox" name="purchase" value="HUAWEI"/>purchase<br/>
@@ -50,7 +50,7 @@
         </div>
 
         <div style="height: 200px;width: 180px;float: left">
-            <img src="59521206N527bb108.jpg" alt="Error show" width="90px" height="120px"><br/>
+            <img src="003.jpg" alt="Error show" width="90px" height="120px"><br/>
             <b>XiaoMi</b><br/>
             <b>PRICE:1000</b><br/>
             <input type="checkbox" name="purchase" value="XiaoMi"/>purchase<br/>
